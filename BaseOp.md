@@ -115,29 +115,31 @@ GET /{index}/_search
 }
 ```
 
-# 文档类
-### 新增文档
-POST /{index}/_doc/{docId}(可选)
-```json
-{
-  "username":"123",
-  "age":"3"
-}
-```
-
 # 索引类
 
 ### 查看所有索引
+
+```bash
 GET /_cat/indices
+```
 
 ### 查询指定索引
+
+```bash
 GET /_cat/indices/{index}
+```
 
 ### 查看索引模板
+
+```bash
 GET /_template/{index}
+```
 
 ### 索引映射关系查看
+
+```ba	
 GET /{index}/_mapping
+```
 
 ### 为索引添加别名
 PUT /{index}/_alias/{aliasName}
@@ -187,7 +189,13 @@ POST _reindex
 因此索引修改，比较麻烦，所以一般不提供索引删除操作
 
 ### 创建索引
-PUT shopping
+PUT {indexName}  举例： PUT shopping
+
+1. 创建索引的时候，可以为索引干一些事情
+   * 设置索引设置
+   * 指定索引字段映射关系
+   * 为索引设置别名
+
 ```json
 {
     "settings":{
@@ -198,6 +206,12 @@ PUT shopping
 ```
 5个master shards分片 每个 master shards分片 有一个Replica Shard
 
+
+
+
+
+
+
 ### 删除索引
 DELETE {index}
 
@@ -205,6 +219,18 @@ DELETE {index}
 么得
 
 # 文档类
+
+### 新增文档
+
+POST /{index}/_doc/{docId}(可选)
+
+```json
+{
+  "username":"123",
+  "age":"3"
+}
+```
+
 ### 指定ID创建索引文档
 ```json
 PUT shopping/goods/1
@@ -294,8 +320,29 @@ POST {index}/{type}/{id}
 
 修改过程，1.检索旧文档 2. 修改文档 3. 标记删除旧文档 4 添加新文档
 
+# ES分词器
+
+## 通用分词器
+
+### standard
+
+## 中文分词器
+
+### ik_smart
+
+会做最粗粒度的拆分，他会将词分为常用词汇的拆分，比如”我爱你，中国“，会拆分成`我爱你`，`中国` ，适合Phrase（常用短语）查询
+
+### ik_max_word
+
+会将文本做最细粒度的拆分，会穷尽各种组合，比如”我爱你，中国“，会拆分成`我爱你`，`爱你`， `中国` ，适合`Term query`
+
+注：
+ [中文分词器](https://github.com/medcl/elasticsearch-analysis-ik) 需要安装 bin/elasticsearch-plugin  install 分词器插件url
+
+
 
 # ES 安装
+
 ES
 `docker run -d --name es --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms256m -Xmx256m" elasticsearch:7.17.7`
 Kibana
